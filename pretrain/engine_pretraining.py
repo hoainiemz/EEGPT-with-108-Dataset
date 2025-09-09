@@ -21,17 +21,17 @@ from modeling_pretraining import EEGTransformer, EEGTransformerPredictor, EEGTra
 from configs import *
 #-- use channels for model
 
-use_channels_names = [      'FP1', 'FPZ', 'FP2', 
-                               'AF3', 'AF4', 
-            'F7', 'F5', 'F3', 'F1', 'FZ', 'F2', 'F4', 'F6', 'F8', 
-        'FT7', 'FC5', 'FC3', 'FC1', 'FCZ', 'FC2', 'FC4', 'FC6', 'FT8', 
-            'T7', 'C5', 'C3', 'C1', 'CZ', 'C2', 'C4', 'C6', 'T8', 
-        'TP7', 'CP5', 'CP3', 'CP1', 'CPZ', 'CP2', 'CP4', 'CP6', 'TP8',
-             'P7', 'P5', 'P3', 'P1', 'PZ', 'P2', 'P4', 'P6', 'P8', 
-                      'PO7', 'PO3', 'POZ',  'PO4', 'PO8', 
-                               'O1', 'OZ', 'O2', ]
+# use_channels_names = [      'FP1', 'FPZ', 'FP2', 
+#                                'AF3', 'AF4', 
+#             'F7', 'F5', 'F3', 'F1', 'FZ', 'F2', 'F4', 'F6', 'F8', 
+#         'FT7', 'FC5', 'FC3', 'FC1', 'FCZ', 'FC2', 'FC4', 'FC6', 'FT8', 
+#             'T7', 'C5', 'C3', 'C1', 'CZ', 'C2', 'C4', 'C6', 'T8', 
+#         'TP7', 'CP5', 'CP3', 'CP1', 'CPZ', 'CP2', 'CP4', 'CP6', 'TP8',
+#              'P7', 'P5', 'P3', 'P1', 'PZ', 'P2', 'P4', 'P6', 'P8', 
+#                       'PO7', 'PO3', 'POZ',  'PO4', 'PO8', 
+#                                'O1', 'OZ', 'O2', ]
 
-
+use_channels_names = ['FP1', 'FP2', 'F7', 'F3', 'FZ', 'F4', 'F8', 'T7', 'C3', 'CZ', 'C4', 'T8', 'P7', 'P3', 'PZ', 'P4', 'P8', 'O1', 'O2']
 
 class LitEEGPT(pl.LightningModule):
 
@@ -118,6 +118,7 @@ class LitEEGPT(pl.LightningModule):
             h = self.target_encoder(x, self.chans_id.to(x))
             h = F.layer_norm(h, (h.size(-1),))  # normalize over feature-dim
             C, N = self.encoder.num_patches
+            C = self.chans_id.shape[1]
             assert x.shape[-1]%N==0 and x.shape[-2]%C == 0
             block_size_c, block_size_n = x.shape[-2]//C, x.shape[-1]//N
             x = x.view(x.shape[0], C, block_size_c, N, block_size_n)
@@ -139,7 +140,9 @@ class LitEEGPT(pl.LightningModule):
     
     def validation_step(self, batch, batch_idx):
         x, _ = batch
-        mask_x, mask_y = self.make_masks(self.encoder.num_patches)
+        C, N = self.encoder.num_patches
+        C = self.chans_id.shape[1]
+        mask_x, mask_y = self.make_masks((C, N))
         h, y = self.forward_target(x, mask_y)
         z, r = self.forward_context(x, mask_x, mask_y)
         loss1 = self.loss_fn(h, z)
@@ -159,7 +162,9 @@ class LitEEGPT(pl.LightningModule):
     
     def training_step(self, batch, batch_idx):
         x, _ = batch
-        mask_x, mask_y = self.make_masks(self.encoder.num_patches)
+        C, N = self.encoder.num_patches
+        C = 19
+        mask_x, mask_y = self.make_masks((C, N))
         h, y = self.forward_target(x, mask_y)
         z, r = self.forward_context(x, mask_x, mask_y)
         loss1 = self.loss_fn(h, z)

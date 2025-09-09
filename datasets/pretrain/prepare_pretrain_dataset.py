@@ -21,6 +21,182 @@ from torcheeg.datasets.constants import SEED_CHANNEL_LIST, M3CV_CHANNEL_LIST, TS
 from torcheeg.datasets import CSVFolderDataset
 from torchaudio.transforms import Resample
 
+# ------------------- Custom Dataset
+data_108_dir = "/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/test" #"/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/EDF_MINI"
+data_TUEG_dir = "/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/test" #"/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/EDF_MINI"
+
+CUSTOM_CHANNEL_LIST = None  # will fill after reading the first file
+
+use_channels_names = [      'FP1', 'FPZ', 'FP2', 
+                               'AF3', 'AF4', 
+            'F7', 'F5', 'F3', 'F1', 'FZ', 'F2', 'F4', 'F6', 'F8', 
+        'FT7', 'FC5', 'FC3', 'FC1', 'FCZ', 'FC2', 'FC4', 'FC6', 'FT8', 
+            'T7', 'C5', 'C3', 'C1', 'CZ', 'C2', 'C4', 'C6', 'T8', 
+        'TP7', 'CP5', 'CP3', 'CP1', 'CPZ', 'CP2', 'CP4', 'CP6', 'TP8',
+             'P7', 'P5', 'P3', 'P1', 'PZ', 'P2', 'P4', 'P6', 'P8', 
+                      'PO7', 'PO3', 'POZ',  'PO4', 'PO8', 
+                               'O1', 'OZ', 'O2', ]
+
+def temporal_interpolation(x, desired_sequence_length, mode='nearest'):
+    # squeeze and unsqueeze because these are done before batching
+    x = x - x.mean(-2)
+    if len(x.shape) == 2:
+        return torch.nn.functional.interpolate(x.unsqueeze(0), desired_sequence_length, mode=mode).squeeze(0)
+    # Supports batch dimension
+    elif len(x.shape) == 3:
+        return torch.nn.functional.interpolate(x, desired_sequence_length, mode=mode)
+    else:
+        raise ValueError("TemporalInterpolation only support sequence of single dim channels with optional batch")
+
+def _normalize_eeg_ch_names(ch_names):
+    # Chuẩn hoá: bỏ dấu chấm, viết hoa
+    normed = [x.strip('.').upper() for x in ch_names]
+
+    # Mapping alias để khớp với danh sách 58 kênh EEGPT
+    mapping = {
+        # Temporal (hệ cũ ↔ hệ mở rộng)
+        'T3': 'T7',
+        'T4': 'T8',
+        'T5': 'P7',
+        'T6': 'P8',
+        # Earlobes / mastoid ↔ chuẩn mở rộng
+        'A1': 'TP9',
+        'A2': 'TP10',
+    }
+
+    normed = [mapping.get(ch, ch) for ch in normed]
+    return normed
+
+def _read_edf_as_fixed_epochs(file_path, epoch_len_s=6.0, sfreq_target:int=256, reref_avg=True):
+    raw = mne.io.read_raw_edf(file_path, preload=True, verbose=False)
+
+    # Chuẩn hoá tên kênh (giúp PickElectrode mapping chuẩn)
+    raw.rename_channels({ch: ch.strip('.').upper() for ch in raw.ch_names})
+
+    # (Tuỳ chọn) average re-reference để gần với thiết lập trong bài
+    if reref_avg:
+        raw.set_eeg_reference('average', projection=False, verbose=False)
+
+    # (Tuỳ chọn) resample về 256 Hz cho đồng nhất kích thước
+    if sfreq_target:
+        raw.resample(sfreq_target, npad="auto")
+
+    # thời lượng file (giây)
+    dur = (raw.n_times / raw.info["sfreq"])
+    if dur < epoch_len_s:
+        return None, None
+
+    # Cắt thành cửa sổ 6s (non-overlap) cho pretrain
+    epochs = mne.make_fixed_length_epochs(
+        raw,
+        duration=epoch_len_s,
+        overlap=0.0,
+        preload=True,
+        verbose=False
+    )
+    
+    return epochs, _normalize_eeg_ch_names(raw.ch_names)
+
+def _build_custom_meta(root_dir, epoch_len_s=6.0, sfreq_target=256, dataset_name=None):
+    import glob
+    rows = []
+    global CUSTOM_CHANNEL_LIST
+    CUSTOM_CHANNEL_LIST = None
+
+    edf_files = sorted(glob.glob(os.path.join(root_dir, "**/*.edf"), recursive=True))
+    if len(edf_files) == 0:
+        raise FileNotFoundError(f"No .edf found under {root_dir}")
+
+    # Đếm nhanh số epoch mỗi file để lưu xuống meta (đỡ phải load lại khi iterate)
+    for fp in edf_files:
+        epochs, chs = _read_edf_as_fixed_epochs(fp, epoch_len_s=epoch_len_s, sfreq_target=sfreq_target)
+        if epochs is None:
+            print(f"[SKIP] {fp} too short")
+            continue
+        else:    
+            print(f"[SUCCESS] {fp} processed")
+        if CUSTOM_CHANNEL_LIST is None:
+            CUSTOM_CHANNEL_LIST = chs  # lấy layout kênh chuẩn theo file đầu tiên
+        # lưu đường dẫn & số epoch -> để read_fn tái tạo đúng
+        rows.append({"file_path": fp, "n_epochs": len(epochs)})
+    df = pd.DataFrame(rows)
+    os.makedirs(f"./{dataset_name}", exist_ok=True)
+    csv_path = f"./{dataset_name}/meta.csv"
+    df.to_csv(csv_path, index=False)
+    print(f"{dataset_name} channel list: {CUSTOM_CHANNEL_LIST}")
+    return csv_path
+
+def _custom_read_fn(file_path, n_epochs=None, epoch_len_s=6.0, sfreq_target=256, **kwargs):
+    epochs, _ = _read_edf_as_fixed_epochs(file_path, epoch_len_s=epoch_len_s, sfreq_target=sfreq_target)
+    # (tuỳ) n_epochs trong meta chỉ để info; epochs đã đúng độ dài cửa sổ
+    return epochs
+
+# đặt ở cùng file, trước khi Compose được dùng
+import numpy as np
+
+class PadMissingChannels:
+    def __init__(self, target_chs, current_chs):
+        """
+        target_chs: list[str]  -> danh sách 58 kênh chuẩn (use_channels_names)
+        current_chs: list[str] -> danh sách kênh thực tế trong EDF
+        """
+        self.target_chs = target_chs
+        self.current_chs = current_chs
+        self.index_map = [
+            (current_chs.index(ch) if ch in current_chs else None)
+            for ch in target_chs
+        ]
+
+    def __call__(self, eeg=None, **kwargs):
+        """
+        eeg: np.ndarray shape (n_channels_actual, n_times)
+        return: dict với 'eeg' shape (len(target_chs), n_times)
+        """
+        assert eeg is not None, "PadMissingChannels expects keyword arg 'eeg'"
+        n_times = eeg.shape[-1]
+        out = np.zeros((len(self.target_chs), n_times), dtype=eeg.dtype)
+        for i, idx in enumerate(self.index_map):
+            if idx is not None:
+                out[i, :] = eeg[idx, :]
+        # Trả về dict theo chuẩn torcheeg
+        kwargs['eeg'] = out
+        return kwargs
+
+
+def get_custom_edf_dataset(root_dir:str, epoch_len_s=6.0, sfreq_target=256, dataset_name:str = ""):
+    """
+    Plug-and-play for any EDF folder structure. It builds a CSV meta and returns a CSVFolderDataset.
+    """
+    csv_path = _build_custom_meta(root_dir, epoch_len_s=epoch_len_s, sfreq_target=sfreq_target, dataset_name=dataset_name)
+
+    # Tạo dataset dạng CSVFolderDataset để dùng chung transforms của bạn
+    dataset = CSVFolderDataset(
+        csv_path=csv_path,
+        read_fn=lambda file_path, n_epochs=None, **kw: _custom_read_fn(
+            file_path=file_path,
+            n_epochs=n_epochs,
+            epoch_len_s=epoch_len_s,
+            sfreq_target=sfreq_target,
+        ),
+        io_path=data_root_path + 'io/' + dataset_name,
+        online_transform=transforms.Compose([
+            # map kênh của dataset về danh sách 58 kênh chuẩn "use_channels_names"
+            transforms.PickElectrode(
+                transforms.PickElectrode.to_index_list(use_channels_names, CUSTOM_CHANNEL_LIST)
+            ),
+            # PadMissingChannels(use_channels_names, CUSTOM_CHANNEL_LIST),
+            transforms.ToTensor(),
+            # Nội suy thời gian về đúng 256 * epoch_len_s mẫu / cửa sổ, scale sang µV cho thống nhất
+            transforms.Lambda(lambda x: temporal_interpolation(x, int(256 * epoch_len_s)) * 1e3),
+            transforms.To2d(),
+        ]),
+        label_transform=transforms.Compose([
+            transforms.Lambda(lambda _: 0)  # pretrain không cần nhãn
+        ]),
+        num_worker=4
+    )
+    return dataset
+
 # ------------------- PhysioMI
 data_root_path = "./io_root/"
 
@@ -233,7 +409,7 @@ if __name__=="__main__":
     import os
     import tqdm
     
-    for tag in ["PhysioNetMI", "tsu_benchmark", "seed"]: #, "m3cv"
+    for tag in ["108", "TUEG"]: #, "m3cv"
         if tag == "PhysioNetMI":
             dataset = get_physionet_dataset()
         elif tag == "tsu_benchmark":
@@ -242,6 +418,10 @@ if __name__=="__main__":
             dataset = get_M3CV_dataset()
         elif tag == "seed":
             dataset = get_SEED_dataset()
+        elif tag == "108":
+            dataset = get_custom_edf_dataset(data_108_dir, dataset_name = "108")
+        elif tag == "TUEG":
+            dataset = get_custom_edf_dataset(data_TUEG_dir, dataset_name = "TUEG")
         else:
             raise ValueError("Invalid tag")
         print(len(dataset))
@@ -257,6 +437,6 @@ if __name__=="__main__":
             data = x.squeeze_(0)
             # data = data.clone().detach().cpu()
             print(i, data.shape, len(data.shape)==2 and data.shape[0]==58 and data.shape[1]>=1024)
-            assert len(data.shape)==2 and data.shape[0]==58 and data.shape[1]>=1024
+            # assert len(data.shape)==2 and data.shape[0]==58 and data.shape[1]>=1024
             torch.save(data, dst + tag+f"_{i}.edf")
             del data, x

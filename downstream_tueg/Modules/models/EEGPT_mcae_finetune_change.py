@@ -382,7 +382,8 @@ class EEGTransformerReconstructor(nn.Module):
         if self.use_inp_embed:
             x = self.reconstructor_embed(x)
 
-        C, N        = self.num_patches
+        C, N        
+        C = self.chans_id.shape[1]
         B, mN, eN, D= x.shape
         
         # assert mN == N, f"{mN},{N}"

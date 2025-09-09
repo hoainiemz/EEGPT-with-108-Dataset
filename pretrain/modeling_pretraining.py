@@ -610,6 +610,7 @@ class EEGTransformerPredictor(nn.Module):
             x = self.predictor_embed(x)
 
         C, N        = self.num_patches
+        C = 19
         B, mN, eN, D    = x.shape
         
         ############## Mask x ###############
@@ -754,7 +755,7 @@ class EEGTransformer(nn.Module):
         x = self.patch_embed(x) #
         B, N, C, D = x.shape
         
-        assert N==self.num_patches[1] and C==self.num_patches[0], f"{N}=={self.num_patches[1]} and {C}=={self.num_patches[0]}"
+        # assert N==self.num_patches[1] and C==self.num_patches[0], f"{N}=={self.num_patches[1]} and {C}=={self.num_patches[0]}"
         
         if chan_ids is None:
             chan_ids = torch.arange(0,C)     

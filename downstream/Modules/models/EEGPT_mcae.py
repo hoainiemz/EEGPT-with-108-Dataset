@@ -442,6 +442,7 @@ class EEGTransformerReconstructor(nn.Module):
             x = self.reconstructor_embed(x)
 
         C, N        = self.num_patches
+        C = self.chans_id.shape[1]
         B, mN, eN, D= x.shape
         # assert mN == N, f"{mN},{N}"
         ############## Mask x ###############
@@ -597,6 +598,7 @@ class EEGTransformerPredictor(nn.Module):
             x = self.predictor_embed(x)
 
         C, N        = self.num_patches
+        C = self.chans_id.shape[1]
         B, mN, eN, D    = x.shape
         
         ############## Mask x ###############
