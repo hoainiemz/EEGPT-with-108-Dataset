@@ -7,6 +7,7 @@ import torch
 import shutil
 import random
 import mne
+import numpy as np
 
 import pandas as pd
 from torcheeg.datasets import CSVFolderDataset
@@ -20,10 +21,8 @@ from torcheeg import transforms
 from torcheeg.datasets.constants import SEED_CHANNEL_LIST, M3CV_CHANNEL_LIST, TSUBENCHMARK_CHANNEL_LIST
 from torcheeg.datasets import CSVFolderDataset
 from torchaudio.transforms import Resample
-
-# ------------------- Custom Dataset
-data_108_dir = "/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/test" #"/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/EDF_MINI"
-data_TUEG_dir = "/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/test" #"/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/EDF_MINI"
+import lmdb, pickle, io
+from typing import List, Optional
 
 CUSTOM_CHANNEL_LIST = None  # will fill after reading the first file
 
@@ -37,16 +36,10 @@ use_channels_names = [      'FP1', 'FPZ', 'FP2',
                       'PO7', 'PO3', 'POZ',  'PO4', 'PO8', 
                                'O1', 'OZ', 'O2', ]
 
-def temporal_interpolation(x, desired_sequence_length, mode='nearest'):
-    # squeeze and unsqueeze because these are done before batching
-    x = x - x.mean(-2)
-    if len(x.shape) == 2:
-        return torch.nn.functional.interpolate(x.unsqueeze(0), desired_sequence_length, mode=mode).squeeze(0)
-    # Supports batch dimension
-    elif len(x.shape) == 3:
-        return torch.nn.functional.interpolate(x, desired_sequence_length, mode=mode)
-    else:
-        raise ValueError("TemporalInterpolation only support sequence of single dim channels with optional batch")
+DATA_PATHS = [
+    '/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/mdb',
+    '/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/108/mdb'
+]
 
 def _normalize_eeg_ch_names(ch_names):
     # Chuẩn hoá: bỏ dấu chấm, viết hoa
@@ -66,6 +59,84 @@ def _normalize_eeg_ch_names(ch_names):
 
     normed = [mapping.get(ch, ch) for ch in normed]
     return normed
+# ------------------- Custom LMDB Dataset
+lmdb_selected_channels = _normalize_eeg_ch_names(['Fp1', 'Fp2', 'F3', 'F4', 'C3', 'C4', 'P3', 'P4', 'O1', 'O2', 'F7', 'F8', 'T3', 'T4', 'T5', 'T6', 'Fz', 'Cz', 'Pz'])
+
+class LmdbTensorDataset(torch.utils.data.Dataset):
+    """
+    Đọc LMDB (.mdb) với cặp {key: mã_bệnh_nhân, value: tensor(c, t, d)}.
+    Trả về x có shape (1, c, t*d) để tương thích với pipeline hiện tại (sau đó code main sẽ squeeze(0)).
+    """
+
+    def __init__(self, db_path: str, key_filter: Optional[List[bytes]] = None):
+        self.db_path = db_path
+        self.env = lmdb.open(db_path, readonly=True, lock=False, readahead=True, meminit=False)
+        with self.env.begin() as txn:
+            raw = txn.get(b"__keys__")
+            cursor = txn.cursor()
+            if raw is not None:
+                keys = pickle.loads(raw)
+                self.keys = [k.encode() for k in keys]
+            else:
+                self.keys = [k for k, _ in cursor]
+
+    def __len__(self):
+        return len(self.keys)
+
+    @staticmethod
+    def _bytes_to_tensor(b: bytes) -> torch.Tensor:
+        """
+        Giải mã value bytes từ LMDB thành torch.Tensor.
+        Hỗ trợ cả numpy.ndarray và torch.Tensor.
+        """
+        # thử pickle trước (LMDB thường lưu numpy bằng pickle)
+        obj = pickle.loads(b)
+        return torch.from_numpy(obj)
+
+    def __getitem__(self, idx):
+        key = self.keys[idx]
+        with self.env.begin() as txn:
+            val_bytes = txn.get(key)
+
+        x = self._bytes_to_tensor(val_bytes).float()  # kỳ vọng (c, t, d) hoặc (c, t*d)
+        if x.ndim == 3:
+            c, t, d = x.shape
+            x = x.reshape(c, t * d)
+        elif x.ndim == 2:
+            # đã là (c, t*d) thì giữ nguyên
+            pass
+        else:
+            raise ValueError(f"Giá trị tại key {key} có shape không hợp lệ: {tuple(x.shape)} (kỳ vọng 2D hoặc 3D)")
+
+        reorder_idx = [
+            lmdb_selected_channels.index(ch) 
+            for ch in use_channels_names 
+            if ch in lmdb_selected_channels
+        ]
+        x = x[reorder_idx, :]   # (len(use_channels_names), t*d)
+
+        y = 0
+        return x, y
+
+def get_lmdb_dataset(db_path: str) -> torch.utils.data.Dataset:
+    """
+    Tạo dataset đọc từ 1 file .mdb (LMDB). Mỗi sample trả về (C, T).
+    """
+    if not os.path.exists(db_path):
+        raise FileNotFoundError(f"Không tìm thấy LMDB: {db_path}")
+    return LmdbTensorDataset(db_path=db_path)
+# ------------------- Custom Dataset
+
+def temporal_interpolation(x, desired_sequence_length, mode='nearest'):
+    # squeeze and unsqueeze because these are done before batching
+    x = x - x.mean(-2)
+    if len(x.shape) == 2:
+        return torch.nn.functional.interpolate(x.unsqueeze(0), desired_sequence_length, mode=mode).squeeze(0)
+    # Supports batch dimension
+    elif len(x.shape) == 3:
+        return torch.nn.functional.interpolate(x, desired_sequence_length, mode=mode)
+    else:
+        raise ValueError("TemporalInterpolation only support sequence of single dim channels with optional batch")
 
 def _read_edf_as_fixed_epochs(file_path, epoch_len_s=6.0, sfreq_target:int=256, reref_avg=True):
     raw = mne.io.read_raw_edf(file_path, preload=True, verbose=False)
@@ -199,28 +270,6 @@ def get_custom_edf_dataset(root_dir:str, epoch_len_s=6.0, sfreq_target=256, data
 
 # ------------------- PhysioMI
 data_root_path = "./io_root/"
-
-
-PHYSIONETMI_CHANNEL_LIST = ['Fc5.', 'Fc3.', 'Fc1.', 
-                            'Fcz.', 'Fc2.', 'Fc4.', 'Fc6.', 'C5..', 'C3..', 'C1..', 
-                            'Cz..', 'C2..', 'C4..', 'C6..', 'Cp5.', 'Cp3.', 'Cp1.', 
-                            'Cpz.', 'Cp2.', 'Cp4.', 'Cp6.', 'Fp1.', 
-                            'Fpz.', 'Fp2.', 'Af7.', 'Af3.', 'Afz.', 'Af4.', 'Af8.', 'F7..', 'F5..', 'F3..', 'F1..', 
-                            'Fz..', 'F2..', 'F4..', 'F6..', 'F8..', 'Ft7.', 'Ft8.', 'T7..', 'T8..', 'T9..', 'T10.', 'Tp7.', 'Tp8.', 'P7..', 'P5..', 'P3..', 'P1..', 
-                            'Pz..', 'P2..', 'P4..', 'P6..', 'P8..', 'Po7.', 'Po3.', 'Poz.', 'Po4.', 'Po8.', 'O1..', 
-                            'Oz..', 'O2..', 'Iz..']
-PHYSIONETMI_CHANNEL_LIST = [x.strip('.').upper() for x in PHYSIONETMI_CHANNEL_LIST]
-
-
-use_channels_names = [      'FP1', 'FPZ', 'FP2', 
-                               'AF3', 'AF4', 
-            'F7', 'F5', 'F3', 'F1', 'FZ', 'F2', 'F4', 'F6', 'F8', 
-        'FT7', 'FC5', 'FC3', 'FC1', 'FCZ', 'FC2', 'FC4', 'FC6', 'FT8', 
-            'T7', 'C5', 'C3', 'C1', 'CZ', 'C2', 'C4', 'C6', 'T8', 
-        'TP7', 'CP5', 'CP3', 'CP1', 'CPZ', 'CP2', 'CP4', 'CP6', 'TP8',
-             'P7', 'P5', 'P3', 'P1', 'PZ', 'P2', 'P4', 'P6', 'P8', 
-                      'PO7', 'PO3', 'POZ',  'PO4', 'PO8', 
-                               'O1', 'OZ', 'O2', ]
 
 def temporal_interpolation(x, desired_sequence_length, mode='nearest'):
     # squeeze and unsqueeze because these are done before batching
@@ -409,21 +458,9 @@ if __name__=="__main__":
     import os
     import tqdm
     
-    for tag in ["108", "TUEG"]: #, "m3cv"
-        if tag == "PhysioNetMI":
-            dataset = get_physionet_dataset()
-        elif tag == "tsu_benchmark":
-            dataset = get_TSU_dataset()
-        elif tag == "m3cv":
-            dataset = get_M3CV_dataset()
-        elif tag == "seed":
-            dataset = get_SEED_dataset()
-        elif tag == "108":
-            dataset = get_custom_edf_dataset(data_108_dir, dataset_name = "108")
-        elif tag == "TUEG":
-            dataset = get_custom_edf_dataset(data_TUEG_dir, dataset_name = "TUEG")
-        else:
-            raise ValueError("Invalid tag")
+    for path in DATA_PATHS:
+        dataset = get_lmdb_dataset(db_path=path)
+        tag = os.path.basename(path)
         print(len(dataset))
         print(dataset[0][0].shape)
         print(dataset[0][0].min(),dataset[0][0].max(), dataset[0][0].mean(),dataset[0][0].std())
