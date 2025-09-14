@@ -1,37 +1,27 @@
 
-import torch
 import torchvision
 import math
 import random
-
-def load_fn(x):
-    x = torch.load(x)
-    
-    window_length = 4*256  
-    data_length = x.shape[1]  
-
-    # Calculate the maximum starting index for the windows
-    max_start_index = data_length - window_length
-
-    # Generate random indices
-    if max_start_index>0:
-        index = random.randint(0, max_start_index)
-        x = x[:, index:index+window_length]
-    x = x.to(torch.float)
-    return x
+import sys
+import os
+sys.path.append(os.path.abspath("../"))
+from datasets.pretrain.merged import merged_dataset
 
 max_epochs = 200
 max_lr = 5e-4
-batch_size=64
+batch_size=32
 devices=[0]
+dataset_dirs = [
+    '/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/dummy_data_ica_a7'
+]
 
 
+# train_dataset = torchvision.datasets.DatasetFolder(root="../datasets/pretrain/merged/TrainFolder/", loader=load_fn,  extensions=['.edf'])
+# valid_dataset = torchvision.datasets.DatasetFolder(root="../datasets/pretrain/merged/ValidFolder/", loader=load_fn, extensions=['.edf'])
 
-train_dataset = torchvision.datasets.DatasetFolder(root="../datasets/pretrain/merged/TrainFolder/", loader=load_fn,  extensions=['.edf'])
-valid_dataset = torchvision.datasets.DatasetFolder(root="../datasets/pretrain/merged/ValidFolder/", loader=load_fn, extensions=['.edf'])
-
-train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, num_workers=0, shuffle=True)
-valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=batch_size, num_workers=0, shuffle=False)
+loaders = merged_dataset.LoadDataset(dataset_dirs, batch_size).get_data_loader()
+train_loader = loaders['train']
+valid_loader = loaders['val']
 
 
 steps_per_epoch = math.ceil(len(train_loader)/len(devices))

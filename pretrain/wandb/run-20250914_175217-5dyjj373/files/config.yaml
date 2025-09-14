@@ -1,0 +1,113 @@
+_wandb:
+    value:
+        cli_version: 0.21.4
+        e:
+            tm9q11tfxc3exis4gexj28mu3isfr8d2:
+                codePath: pretrain/run_pretraining.py
+                codePathLocal: run_pretraining.py
+                cpu_count: 20
+                cpu_count_logical: 40
+                cudaVersion: "12.2"
+                disk:
+                    /:
+                        total: "943412031488"
+                        used: "683663585280"
+                email: nam.th180805@gmail.com
+                executable: /mnt/disk1/aiotlab/envs/hoainiemeegpt/bin/python
+                git:
+                    commit: 2f2f55d1b97f2ab96ce1611f096bb67954ccb9a6
+                    remote: git@github.com:hoainiemz/EEGPT-with-108-Dataset.git
+                gpu: NVIDIA A30
+                gpu_count: 3
+                gpu_nvidia:
+                    - architecture: Ampere
+                      cudaCores: 3584
+                      memoryTotal: "25769803776"
+                      name: NVIDIA A30
+                      uuid: GPU-97533177-ae5d-752f-8fac-73c43a1a67cc
+                    - architecture: Ampere
+                      cudaCores: 3584
+                      memoryTotal: "25769803776"
+                      name: NVIDIA A30
+                      uuid: GPU-b71aa699-b956-12eb-ded3-7590ec6c9937
+                    - architecture: Ampere
+                      cudaCores: 3584
+                      memoryTotal: "25769803776"
+                      name: NVIDIA A30
+                      uuid: GPU-1ae02fa8-11a1-fd0d-1711-434d9c42d9ef
+                host: gpus-Super-Server
+                memory:
+                    total: "134794272768"
+                os: Linux-6.8.0-65-generic-x86_64-with-glibc2.35
+                program: /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/pretrain/run_pretraining.py
+                python: CPython 3.11.13
+                root: .
+                startedAt: "2025-09-14T10:52:17.558666Z"
+                writerId: tm9q11tfxc3exis4gexj28mu3isfr8d2
+        m:
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.11.13
+        t:
+            "1":
+                - 1
+                - 9
+                - 11
+                - 41
+                - 49
+                - 51
+                - 71
+                - 103
+            "2":
+                - 1
+                - 2
+                - 3
+                - 9
+                - 11
+                - 12
+                - 41
+                - 49
+                - 51
+                - 71
+                - 103
+            "3":
+                - 7
+                - 13
+                - 15
+                - 66
+            "4": 3.11.13
+            "5": 0.21.4
+            "6": 4.35.2
+            "12": 0.21.4
+            "13": linux-x86_64
+encoder:
+    value:
+        depth: 2
+        embed_dim: 64
+        embed_num: 1
+        num_heads: 4
+predictor:
+    value:
+        depth: 2
+        embed_dim: 64
+        embed_num: 1
+        num_heads: 4
+        predictor_embed_dim: 64
+reconstructor:
+    value:
+        depth: 4
+        embed_dim: 64
+        embed_num: 1
+        num_heads: 4
+        reconstructor_embed_dim: 64
+tag:
+    value: tiny1
+variant:
+    value: D

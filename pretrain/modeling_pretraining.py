@@ -302,7 +302,7 @@ class Block(nn.Module):
 class PatchEmbed(nn.Module):
     """ Image to Patch Embedding
     """
-    def __init__(self, img_size=(64, 1000), patch_size=16, patch_stride=None, embed_dim=768):
+    def __init__(self, img_size=(19, 6000), patch_size=16, patch_stride=None, embed_dim=768):
         super().__init__()
         self.img_size = img_size
         self.patch_size = patch_size
@@ -320,10 +320,11 @@ class PatchEmbed(nn.Module):
         x = x.unsqueeze(1)# B, 1, C, T
         x = self.proj(x).transpose(1,3) # B, T, C, D
         return x
+    
 class PatchNormEmbed(nn.Module):
     """ Image to Patch Embedding
     """
-    def __init__(self, img_size=(64, 1000), patch_size=16, patch_stride=None, embed_dim=768):
+    def __init__(self, img_size=(19, 6000), patch_size=16, patch_stride=None, embed_dim=768):
         super().__init__()
         
         assert img_size[1] % patch_size==0
@@ -610,7 +611,7 @@ class EEGTransformerPredictor(nn.Module):
             x = self.predictor_embed(x)
 
         C, N        = self.num_patches
-        C = 19
+        # C = 19
         B, mN, eN, D    = x.shape
         
         ############## Mask x ###############
@@ -661,7 +662,7 @@ class EEGTransformer(nn.Module):
     """ EEG Transformer """
     def __init__(
         self,
-        img_size=(64,1000),
+        img_size=(19,6000),
         patch_size=64,
         patch_stride=None,
         embed_dim=768,

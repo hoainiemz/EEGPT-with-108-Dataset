@@ -42,8 +42,8 @@ class LitEEGPT(pl.LightningModule):
         self.USE_SKIP   = USE_SKIP
         
         encoder = EEGTransformer(
-            img_size=[58, 256*4],
-            patch_size=32*2,
+            img_size=[19, 6000],
+            patch_size=30,
             mlp_ratio=4.0,
             drop_rate=0.0,
             attn_drop_rate=0.0,
@@ -67,7 +67,7 @@ class LitEEGPT(pl.LightningModule):
         
         reconstructor = EEGTransformerReconstructor(
             num_patches=encoder.num_patches,
-            patch_size=32*2,
+            patch_size=30,
             mlp_ratio=4.0,
             drop_rate=0.0,
             attn_drop_rate=0.0,
@@ -118,7 +118,6 @@ class LitEEGPT(pl.LightningModule):
             h = self.target_encoder(x, self.chans_id.to(x))
             h = F.layer_norm(h, (h.size(-1),))  # normalize over feature-dim
             C, N = self.encoder.num_patches
-            C = self.chans_id.shape[1]
             assert x.shape[-1]%N==0 and x.shape[-2]%C == 0
             block_size_c, block_size_n = x.shape[-2]//C, x.shape[-1]//N
             x = x.view(x.shape[0], C, block_size_c, N, block_size_n)
@@ -141,7 +140,6 @@ class LitEEGPT(pl.LightningModule):
     def validation_step(self, batch, batch_idx):
         x, _ = batch
         C, N = self.encoder.num_patches
-        C = self.chans_id.shape[1]
         mask_x, mask_y = self.make_masks((C, N))
         h, y = self.forward_target(x, mask_y)
         z, r = self.forward_context(x, mask_x, mask_y)
@@ -163,7 +161,7 @@ class LitEEGPT(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         x, _ = batch
         C, N = self.encoder.num_patches
-        C = 19
+        # C = 19
         mask_x, mask_y = self.make_masks((C, N))
         h, y = self.forward_target(x, mask_y)
         z, r = self.forward_context(x, mask_x, mask_y)
@@ -268,6 +266,18 @@ class LitEEGPT(pl.LightningModule):
         return (
             {'optimizer': optimizer, 'lr_scheduler': lr_dict},
         )
+    
+    def on_fit_start(self):
+        # Cho phép W&B watch model (log grad/param)
+        if hasattr(self.logger, "experiment"):
+            try:
+                import wandb
+                self.logger.watch(self, log="all", log_freq=100)
+                # đẩy thêm cấu hình (tuỳ chọn)
+                cfg = dict(models_configs=self.hparams.get("models_configs", "hidden"))
+                self.logger.experiment.config.update(cfg, allow_val_change=True)
+            except Exception:
+                pass
         
 
 #-- modeling

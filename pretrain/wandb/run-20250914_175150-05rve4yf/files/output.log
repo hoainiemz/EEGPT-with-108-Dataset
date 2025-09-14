@@ -1,0 +1,131 @@
+[34m[1mwandb[0m: Detected [huggingface_hub.inference] in use.
+[34m[1mwandb[0m: Use W&B Weave for improved LLM call tracing. Install Weave with `pip install weave` then add `import weave` to the top of your script.
+[34m[1mwandb[0m: For more information, check out the docs at: https://weave-docs.wandb.ai/
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [1]
+
+  | Name           | Type                        | Params
+---------------------------------------------------------------
+0 | encoder        | EEGTransformer              | 106 K
+1 | target_encoder | EEGTransformer              | 106 K
+2 | predictor      | EEGTransformerPredictor     | 108 K
+3 | reconstructor  | EEGTransformerReconstructor | 210 K
+4 | loss_fn        | MSELoss                     | 0
+---------------------------------------------------------------
+424 K     Trainable params
+106 K     Non-trainable params
+530 K     Total params
+2.124     Total estimated model params size (MB)
+Epoch 0:   0%|                                                                                                          | 0/51 [00:00<?, ?it/s]
+/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:492: Your `val_dataloader`'s sampler has shuffling enabled, it is strongly recommended that you turn shuffling off for val/test dataloaders.
+/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'val_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=39` in the `DataLoader` to improve performance.
+/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:441: The 'train_dataloader' does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=39` in the `DataLoader` to improve performance.
+Traceback (most recent call last):
+  File "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/pretrain/run_pretraining.py", line 47, in <module>
+    trainer.fit(model, train_loader, valid_loader)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 544, in fit
+    call._call_and_handle_interrupt(
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 44, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 580, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 989, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1035, in _run_stage
+    self.fit_loop.run()
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 202, in run
+    self.advance()
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 359, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 136, in run
+    self.advance(data_fetcher)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 240, in advance
+    batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 187, in run
+    self._optimizer_step(batch_idx, closure)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 265, in _optimizer_step
+    call._call_lightning_module_hook(
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 157, in _call_lightning_module_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1282, in optimizer_step
+    optimizer.step(closure=optimizer_closure)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 151, in step
+    step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 230, in optimizer_step
+    return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/precision.py", line 117, in optimizer_step
+    return optimizer.step(closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/optim/lr_scheduler.py", line 69, in wrapper
+    return wrapped(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/optim/optimizer.py", line 280, in wrapper
+    out = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/optim/optimizer.py", line 33, in _use_grad
+    ret = func(self, *args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/optim/adamw.py", line 148, in step
+    loss = closure()
+           ^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/precision.py", line 104, in _wrap_closure
+    closure_result = closure()
+                     ^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 140, in __call__
+    self._result = self.closure(*args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 115, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 126, in closure
+    step_output = self._step_fn()
+                  ^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 315, in _training_step
+    training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 309, in _call_strategy_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 382, in training_step
+    return self.lightning_module.training_step(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/pretrain/engine_pretraining.py", line 167, in training_step
+    z, r = self.forward_context(x, mask_x, mask_y)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/pretrain/engine_pretraining.py", line 134, in forward_context
+    z, comb_z = self.predictor(z, mask_x=mask_x)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/pretrain/modeling_pretraining.py", line 644, in forward
+    x = blk(x, freqs) # B, NC, D
+        ^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/pretrain/modeling_pretraining.py", line 299, in forward
+    x = x + self.drop_path(self.mlp(self.norm2(x)))
+                           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/pretrain/modeling_pretraining.py", line 231, in forward
+    x = self.fc1(x)
+        ^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/torch/nn/modules/linear.py", line 114, in forward
+    return F.linear(input, self.weight, self.bias)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB (GPU 0; 23.50 GiB total capacity; 223.39 MiB already allocated; 20.62 MiB free; 234.00 MiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF

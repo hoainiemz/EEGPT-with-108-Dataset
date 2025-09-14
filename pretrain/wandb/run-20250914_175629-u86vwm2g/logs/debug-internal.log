@@ -1,0 +1,12 @@
+{"time":"2025-09-14T17:56:29.883508539+07:00","level":"INFO","msg":"stream: starting","core version":"0.21.4"}
+{"time":"2025-09-14T17:56:30.369416997+07:00","level":"INFO","msg":"stream: created new stream","id":"u86vwm2g"}
+{"time":"2025-09-14T17:56:30.369492217+07:00","level":"INFO","msg":"stream: started","id":"u86vwm2g"}
+{"time":"2025-09-14T17:56:30.369517387+07:00","level":"INFO","msg":"writer: started","stream_id":"u86vwm2g"}
+{"time":"2025-09-14T17:56:30.369532717+07:00","level":"INFO","msg":"handler: started","stream_id":"u86vwm2g"}
+{"time":"2025-09-14T17:56:30.369645564+07:00","level":"INFO","msg":"sender: started","stream_id":"u86vwm2g"}
+{"time":"2025-09-14T17:57:44.439652275+07:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"updating run metadata","runtime_seconds":0.001303947}],"total_operations":1}}
+{"time":"2025-09-14T17:57:45.306265434+07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-09-14T17:57:46.065389991+07:00","level":"INFO","msg":"stream: closing","id":"u86vwm2g"}
+{"time":"2025-09-14T17:57:46.065438184+07:00","level":"INFO","msg":"handler: closed","stream_id":"u86vwm2g"}
+{"time":"2025-09-14T17:57:46.065580838+07:00","level":"INFO","msg":"sender: closed","stream_id":"u86vwm2g"}
+{"time":"2025-09-14T17:57:46.065602904+07:00","level":"INFO","msg":"stream: closed","id":"u86vwm2g"}
