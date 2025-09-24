@@ -1,0 +1,12 @@
+{"time":"2025-09-22T18:42:02.846437522+07:00","level":"INFO","msg":"stream: starting","core version":"0.21.4"}
+{"time":"2025-09-22T18:42:03.297968764+07:00","level":"INFO","msg":"stream: created new stream","id":"jraf4j4h"}
+{"time":"2025-09-22T18:42:03.298036484+07:00","level":"INFO","msg":"stream: started","id":"jraf4j4h"}
+{"time":"2025-09-22T18:42:03.29806387+07:00","level":"INFO","msg":"sender: started","stream_id":"jraf4j4h"}
+{"time":"2025-09-22T18:42:03.298059379+07:00","level":"INFO","msg":"handler: started","stream_id":"jraf4j4h"}
+{"time":"2025-09-22T18:42:03.298122405+07:00","level":"INFO","msg":"writer: started","stream_id":"jraf4j4h"}
+{"time":"2025-09-22T18:44:25.793237287+07:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"updating run metadata","runtime_seconds":0.001288977}],"total_operations":1}}
+{"time":"2025-09-22T18:44:27.157368202+07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-09-22T18:44:27.519129178+07:00","level":"INFO","msg":"stream: closing","id":"jraf4j4h"}
+{"time":"2025-09-22T18:44:27.51915247+07:00","level":"INFO","msg":"handler: closed","stream_id":"jraf4j4h"}
+{"time":"2025-09-22T18:44:27.519218902+07:00","level":"INFO","msg":"sender: closed","stream_id":"jraf4j4h"}
+{"time":"2025-09-22T18:44:27.519231028+07:00","level":"INFO","msg":"stream: closed","id":"jraf4j4h"}

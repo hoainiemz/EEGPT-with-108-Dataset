@@ -1,0 +1,33 @@
+{
+  "os":  "Linux-6.8.0-65-generic-x86_64-with-glibc2.35",
+  "python":  "CPython 3.11.13",
+  "startedAt":  "2025-09-22T15:11:29.484962Z",
+  "args":  [
+    "--num_of_classes",
+    "94",
+    "--epochs",
+    "50",
+    "--batch_size",
+    "256",
+    "--lr",
+    "3e-4",
+    "--downstream_dataset",
+    "NFM",
+    "--datasets_dir",
+    "/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/nfm_eegpt_official",
+    "--foundation_dir",
+    "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/checkpoint/official.ckpt"
+  ],
+  "program":  "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/finetune_main.py",
+  "codePath":  "finetune_main.py",
+  "codePathLocal":  "finetune_main.py",
+  "git":  {
+    "remote":  "https://github.com/BINE022/EEGPT.git",
+    "commit":  "a0e0a8fad729e2ecf4eedb3a81548a6e6d48a705"
+  },
+  "email":  "nam.th180805@gmail.com",
+  "root":  "/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT",
+  "host":  "gpus-Super-Server",
+  "executable":  "/mnt/disk1/aiotlab/envs/hoainiemeegpt/bin/python",
+  "writerId":  "40so5snqv5apyh0odphht2zfe3mvyjvb"
+}

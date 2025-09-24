@@ -61,7 +61,6 @@ class LinearWithConstraint(nn.Linear):
             )
         return super(LinearWithConstraint, self).forward(x)
 
-
 def SMMDL_marginal(Cs,Ct):
 
     '''

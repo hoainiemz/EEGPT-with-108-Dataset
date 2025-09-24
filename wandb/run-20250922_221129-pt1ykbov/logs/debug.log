@@ -1,0 +1,53 @@
+2025-09-22 22:11:29,487 INFO    MainThread:1756360 [wandb_setup.py:_flush():81] Current SDK version is 0.21.4
+2025-09-22 22:11:29,487 INFO    MainThread:1756360 [wandb_setup.py:_flush():81] Configure stats pid to 1756360
+2025-09-22 22:11:29,487 INFO    MainThread:1756360 [wandb_setup.py:_flush():81] Loading settings from /home/aiotlab/.config/wandb/settings
+2025-09-22 22:11:29,487 INFO    MainThread:1756360 [wandb_setup.py:_flush():81] Loading settings from /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/settings
+2025-09-22 22:11:29,488 INFO    MainThread:1756360 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2025-09-22 22:11:29,488 INFO    MainThread:1756360 [wandb_init.py:setup_run_log_directory():686] Logging user logs to /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/run-20250922_221129-pt1ykbov/logs/debug.log
+2025-09-22 22:11:29,488 INFO    MainThread:1756360 [wandb_init.py:setup_run_log_directory():687] Logging internal logs to /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/run-20250922_221129-pt1ykbov/logs/debug-internal.log
+2025-09-22 22:11:29,488 INFO    MainThread:1756360 [wandb_init.py:init():813] calling init triggers
+2025-09-22 22:11:29,488 INFO    MainThread:1756360 [wandb_init.py:init():818] wandb.init called with sweep_config: {}
+config: {'project_name': '', 'seed': 3407, 'cuda': 0, 'epochs': 50, 'batch_size': 256, 'lr': 0.0003, 'weight_decay': 0.05, 'optimizer': 'AdamW', 'clip_value': 1, 'dropout': 0.1, 'classifier': 'all_patch_reps', 'downstream_dataset': 'NFM', 'datasets_dir': '/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/nfm_eegpt_official', 'num_of_classes': 94, 'model_dir': './data/wjq/models_weights/Big/BigFaced', 'num_workers': 16, 'label_smoothing': 0.1, 'multi_lr': False, 'frozen': False, 'use_pretrained_weights': True, 'foundation_dir': '/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/checkpoint/official.ckpt', '_wandb': {}}
+2025-09-22 22:11:29,488 INFO    MainThread:1756360 [wandb_init.py:init():854] starting backend
+2025-09-22 22:11:29,700 INFO    MainThread:1756360 [wandb_init.py:init():857] sending inform_init request
+2025-09-22 22:11:29,707 INFO    MainThread:1756360 [wandb_init.py:init():865] backend started and connected
+2025-09-22 22:11:29,710 INFO    MainThread:1756360 [wandb_init.py:init():936] updated telemetry
+2025-09-22 22:11:29,717 INFO    MainThread:1756360 [wandb_init.py:init():960] communicating run to backend with 90.0 second timeout
+2025-09-22 22:11:31,298 INFO    MainThread:1756360 [wandb_init.py:init():1011] starting run threads in backend
+2025-09-22 22:11:31,465 WARNING MainThread:1756360 [wandb_init.py:init():1563] [no run ID] interrupted
+Traceback (most recent call last):
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/wandb/sdk/wandb_init.py", line 1554, in init
+    run = wi.init(run_settings, run_config, run_printer)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/wandb/sdk/wandb_init.py", line 1048, in init
+    run._on_start()
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/wandb/sdk/wandb_run.py", line 2530, in _on_start
+    self._backend.interface.publish_python_packages(working_set())
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/wandb/sdk/interface/interface.py", line 347, in publish_python_packages
+    for pkg in working_set:
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/site-packages/wandb/util.py", line 1995, in working_set
+    yield InstalledDistribution(key=d.metadata["Name"], version=d.version)
+                                    ^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/importlib/metadata/__init__.py", line 617, in metadata
+    return _adapters.Message(email.message_from_string(text))
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/email/__init__.py", line 37, in message_from_string
+    return Parser(*args, **kws).parsestr(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/email/parser.py", line 67, in parsestr
+    return self.parse(StringIO(text), headersonly=headersonly)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/email/parser.py", line 56, in parse
+    feedparser.feed(data)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/email/feedparser.py", line 174, in feed
+    self._call_parse()
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/email/feedparser.py", line 178, in _call_parse
+    self._parse()
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/email/feedparser.py", line 238, in _parsegen
+    self._parse_headers(headers)
+  File "/mnt/disk1/aiotlab/envs/hoainiemeegpt/lib/python3.11/email/feedparser.py", line 489, in _parse_headers
+    if line.startswith('From '):
+       ^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+2025-09-22 22:11:31,548 INFO    wandb-AsyncioManager-main:1756360 [service_client.py:_forward_responses():84] Reached EOF.
+2025-09-22 22:11:31,548 INFO    wandb-AsyncioManager-main:1756360 [mailbox.py:close():137] Closing mailbox, abandoning 0 handles.

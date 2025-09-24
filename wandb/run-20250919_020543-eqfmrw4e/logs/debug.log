@@ -1,0 +1,21 @@
+2025-09-19 02:05:43,248 INFO    MainThread:3582508 [wandb_init.py:setup_run_log_directory():686] Logging user logs to /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/run-20250919_020543-eqfmrw4e/logs/debug.log
+2025-09-19 02:05:43,248 INFO    MainThread:3582508 [wandb_init.py:setup_run_log_directory():687] Logging internal logs to /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/run-20250919_020543-eqfmrw4e/logs/debug-internal.log
+2025-09-19 02:05:43,249 INFO    MainThread:3582508 [wandb_init.py:init():813] calling init triggers
+2025-09-19 02:05:43,249 INFO    MainThread:3582508 [wandb_init.py:init():818] wandb.init called with sweep_config: {}
+config: {'project_name': 'EEGFoundationModel', 'modality_mode': 'mono', 'num_folds': -1, 'seed': 3407, 'cuda': 0, 'epochs': 20, 'batch_size': 8, 'lr': 0.0005, 'weight_decay': 0.05, 'optimizer': 'AdamW', 'clip_value': 1, 'dropout': 0.1, 'downstream_dataset': 'PEARL', 'datasets_dir': '/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/pearl_30s_oldnumpy/fold_1', 'num_of_classes': 2, 'model_dir': './data/wjq/models_weights/Big/BigFaced', 'num_workers': 16, 'label_smoothing': 0.1, 'multi_lr': False, 'frozen': False, 'use_pretrained_weights': True, 'foundation_dir': '/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/checkpoint/eegpt_mcae_58chs_4s_large4E.ckpt', '_wandb': {}}
+2025-09-19 02:05:43,249 INFO    MainThread:3582508 [wandb_init.py:init():854] starting backend
+2025-09-19 02:05:43,249 INFO    MainThread:3582508 [wandb_init.py:init():857] sending inform_init request
+2025-09-19 02:05:43,252 INFO    MainThread:3582508 [wandb_init.py:init():865] backend started and connected
+2025-09-19 02:05:43,260 INFO    MainThread:3582508 [wandb_init.py:init():936] updated telemetry
+2025-09-19 02:05:43,270 INFO    MainThread:3582508 [wandb_init.py:init():960] communicating run to backend with 90.0 second timeout
+2025-09-19 02:05:45,017 INFO    MainThread:3582508 [wandb_init.py:init():1011] starting run threads in backend
+2025-09-19 02:05:45,315 INFO    MainThread:3582508 [wandb_run.py:_console_start():2506] atexit reg
+2025-09-19 02:05:45,315 INFO    MainThread:3582508 [wandb_run.py:_redirect():2354] redirect: wrap_raw
+2025-09-19 02:05:45,315 INFO    MainThread:3582508 [wandb_run.py:_redirect():2423] Wrapping output streams.
+2025-09-19 02:05:45,315 INFO    MainThread:3582508 [wandb_run.py:_redirect():2446] Redirects installed.
+2025-09-19 02:05:45,316 INFO    MainThread:3582508 [wandb_init.py:init():1049] run started, returning control to user process
+2025-09-19 02:20:47,766 INFO    MainThread:3582508 [wandb_run.py:_finish():2272] finishing run hoainiem-hanoi-university-of-science-and-technology/EEGFoundationModel/eqfmrw4e
+2025-09-19 02:20:47,766 INFO    MainThread:3582508 [wandb_run.py:_atexit_cleanup():2471] got exitcode: 0
+2025-09-19 02:20:47,766 INFO    MainThread:3582508 [wandb_run.py:_restore():2453] restore
+2025-09-19 02:20:47,766 INFO    MainThread:3582508 [wandb_run.py:_restore():2459] restore done
+2025-09-19 02:20:49,638 INFO    MainThread:3582508 [wandb_run.py:_footer_sync_info():3867] logging synced files

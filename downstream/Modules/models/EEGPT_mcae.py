@@ -305,7 +305,8 @@ class PatchEmbed(nn.Module):
     def forward(self, x):
         # x: B,C,T
         x = x.unsqueeze(1)# B, 1, C, T
-        x = self.proj(x).transpose(1,3) # B, T, C, D
+        x = self.proj(x)
+        x = x.transpose(1,3) # B, T, C, D
         return x
 class PatchNormEmbed(nn.Module):
     """ Image to Patch Embedding

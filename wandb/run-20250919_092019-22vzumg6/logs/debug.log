@@ -1,0 +1,26 @@
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_setup.py:_flush():81] Current SDK version is 0.21.4
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_setup.py:_flush():81] Configure stats pid to 3878509
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_setup.py:_flush():81] Loading settings from /home/aiotlab/.config/wandb/settings
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_setup.py:_flush():81] Loading settings from /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/settings
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_init.py:setup_run_log_directory():686] Logging user logs to /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/run-20250919_092019-22vzumg6/logs/debug.log
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_init.py:setup_run_log_directory():687] Logging internal logs to /mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/wandb/run-20250919_092019-22vzumg6/logs/debug-internal.log
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_init.py:init():813] calling init triggers
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_init.py:init():818] wandb.init called with sweep_config: {}
+config: {'project_name': 'EEGFoundationModel', 'modality_mode': 'mono', 'num_folds': -1, 'seed': 3407, 'cuda': 0, 'epochs': 20, 'batch_size': 8, 'lr': 0.0003, 'weight_decay': 0.05, 'optimizer': 'AdamW', 'clip_value': 1, 'dropout': 0.1, 'downstream_dataset': 'PEARL', 'datasets_dir': '/mnt/disk1/aiotlab/namth/EEGFoundationModel/datasets/pearl_30s_oldnumpy', 'num_of_classes': 2, 'model_dir': './data/wjq/models_weights/Big/BigFaced', 'num_workers': 16, 'label_smoothing': 0.1, 'multi_lr': False, 'frozen': False, 'use_pretrained_weights': True, 'foundation_dir': '/mnt/disk1/aiotlab/namth/EEGFoundationModel/EEGPT/checkpoint/eegpt_mcae_58chs_4s_large4E.ckpt', '_wandb': {}}
+2025-09-19 09:20:19,975 INFO    MainThread:3878509 [wandb_init.py:init():854] starting backend
+2025-09-19 09:20:20,181 INFO    MainThread:3878509 [wandb_init.py:init():857] sending inform_init request
+2025-09-19 09:20:20,187 INFO    MainThread:3878509 [wandb_init.py:init():865] backend started and connected
+2025-09-19 09:20:20,189 INFO    MainThread:3878509 [wandb_init.py:init():936] updated telemetry
+2025-09-19 09:20:20,194 INFO    MainThread:3878509 [wandb_init.py:init():960] communicating run to backend with 90.0 second timeout
+2025-09-19 09:20:21,087 INFO    MainThread:3878509 [wandb_init.py:init():1011] starting run threads in backend
+2025-09-19 09:20:21,393 INFO    MainThread:3878509 [wandb_run.py:_console_start():2506] atexit reg
+2025-09-19 09:20:21,394 INFO    MainThread:3878509 [wandb_run.py:_redirect():2354] redirect: wrap_raw
+2025-09-19 09:20:21,394 INFO    MainThread:3878509 [wandb_run.py:_redirect():2423] Wrapping output streams.
+2025-09-19 09:20:21,394 INFO    MainThread:3878509 [wandb_run.py:_redirect():2446] Redirects installed.
+2025-09-19 09:20:21,397 INFO    MainThread:3878509 [wandb_init.py:init():1049] run started, returning control to user process
+2025-09-19 09:34:12,994 INFO    MainThread:3878509 [wandb_run.py:_finish():2272] finishing run hoainiem-hanoi-university-of-science-and-technology/EEGFoundationModel/22vzumg6
+2025-09-19 09:34:12,994 INFO    MainThread:3878509 [wandb_run.py:_atexit_cleanup():2471] got exitcode: 0
+2025-09-19 09:34:12,994 INFO    MainThread:3878509 [wandb_run.py:_restore():2453] restore
+2025-09-19 09:34:12,994 INFO    MainThread:3878509 [wandb_run.py:_restore():2459] restore done
+2025-09-19 09:34:14,862 INFO    MainThread:3878509 [wandb_run.py:_footer_sync_info():3867] logging synced files

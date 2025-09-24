@@ -1,0 +1,11 @@
+{"time":"2025-09-22T18:39:48.268543938+07:00","level":"INFO","msg":"stream: starting","core version":"0.21.4"}
+{"time":"2025-09-22T18:39:48.737332752+07:00","level":"INFO","msg":"stream: created new stream","id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:48.737395122+07:00","level":"INFO","msg":"stream: started","id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:48.737422819+07:00","level":"INFO","msg":"sender: started","stream_id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:48.737444912+07:00","level":"INFO","msg":"writer: started","stream_id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:48.737501363+07:00","level":"INFO","msg":"handler: started","stream_id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:52.007474003+07:00","level":"INFO","msg":"stream: closing","id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:53.36990343+07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-09-22T18:39:53.757218987+07:00","level":"INFO","msg":"handler: closed","stream_id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:53.757431242+07:00","level":"INFO","msg":"sender: closed","stream_id":"bc3lesdo"}
+{"time":"2025-09-22T18:39:53.757471202+07:00","level":"INFO","msg":"stream: closed","id":"bc3lesdo"}

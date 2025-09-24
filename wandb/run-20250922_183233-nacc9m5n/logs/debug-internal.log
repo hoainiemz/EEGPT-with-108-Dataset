@@ -1,0 +1,12 @@
+{"time":"2025-09-22T18:32:33.785064874+07:00","level":"INFO","msg":"stream: starting","core version":"0.21.4"}
+{"time":"2025-09-22T18:32:34.208711046+07:00","level":"INFO","msg":"stream: created new stream","id":"nacc9m5n"}
+{"time":"2025-09-22T18:32:34.208772685+07:00","level":"INFO","msg":"stream: started","id":"nacc9m5n"}
+{"time":"2025-09-22T18:32:34.20880791+07:00","level":"INFO","msg":"writer: started","stream_id":"nacc9m5n"}
+{"time":"2025-09-22T18:32:34.208831573+07:00","level":"INFO","msg":"handler: started","stream_id":"nacc9m5n"}
+{"time":"2025-09-22T18:32:34.208914364+07:00","level":"INFO","msg":"sender: started","stream_id":"nacc9m5n"}
+{"time":"2025-09-22T18:34:14.274608158+07:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"updating run metadata","runtime_seconds":0.000619442}],"total_operations":1}}
+{"time":"2025-09-22T18:34:15.636336504+07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-09-22T18:34:16.009768202+07:00","level":"INFO","msg":"stream: closing","id":"nacc9m5n"}
+{"time":"2025-09-22T18:34:16.009804616+07:00","level":"INFO","msg":"handler: closed","stream_id":"nacc9m5n"}
+{"time":"2025-09-22T18:34:16.009895486+07:00","level":"INFO","msg":"sender: closed","stream_id":"nacc9m5n"}
+{"time":"2025-09-22T18:34:16.009921036+07:00","level":"INFO","msg":"stream: closed","id":"nacc9m5n"}

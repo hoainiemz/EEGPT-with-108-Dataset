@@ -1,0 +1,12 @@
+{"time":"2025-09-19T15:01:14.958698314+07:00","level":"INFO","msg":"stream: starting","core version":"0.21.4"}
+{"time":"2025-09-19T15:01:16.109353401+07:00","level":"INFO","msg":"stream: created new stream","id":"bm4pyfjh"}
+{"time":"2025-09-19T15:01:16.109400716+07:00","level":"INFO","msg":"stream: started","id":"bm4pyfjh"}
+{"time":"2025-09-19T15:01:16.109452662+07:00","level":"INFO","msg":"sender: started","stream_id":"bm4pyfjh"}
+{"time":"2025-09-19T15:01:16.109444927+07:00","level":"INFO","msg":"handler: started","stream_id":"bm4pyfjh"}
+{"time":"2025-09-19T15:01:16.109461651+07:00","level":"INFO","msg":"writer: started","stream_id":"bm4pyfjh"}
+{"time":"2025-09-19T15:13:56.78281375+07:00","level":"INFO","msg":"handler: operation stats","stats":{"operations":[{"desc":"updating run metadata","runtime_seconds":0.001321085}],"total_operations":1}}
+{"time":"2025-09-19T15:13:57.694306885+07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-09-19T15:13:58.081684409+07:00","level":"INFO","msg":"stream: closing","id":"bm4pyfjh"}
+{"time":"2025-09-19T15:13:58.081717342+07:00","level":"INFO","msg":"handler: closed","stream_id":"bm4pyfjh"}
+{"time":"2025-09-19T15:13:58.081772939+07:00","level":"INFO","msg":"sender: closed","stream_id":"bm4pyfjh"}
+{"time":"2025-09-19T15:13:58.081786966+07:00","level":"INFO","msg":"stream: closed","id":"bm4pyfjh"}
